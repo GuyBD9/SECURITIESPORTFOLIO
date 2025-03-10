@@ -1,4 +1,3 @@
-# ai/ollama_model.py
 import requests
 
 class OllamaModel:

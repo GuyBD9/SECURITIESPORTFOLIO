@@ -40,7 +40,7 @@ def start_repl():
                 # For demonstration, create a CommonStock with sample data.
                 security = CommonStock(symbol, "Example Stock", price=100, industry="real estate", volatility="low")
             elif sec_type == "bond":
-                security = CorporateBond(symbol, "Example Bond", price=1000, coupon_rate=5, maturity="2030", industry="industry and finance", volatility="high")
+                security = CorporateBond(symbol, "Example Bond", price=1000, industry="industry and finance", volatility="high")
             else:
                 print("Unknown security type. Use 'stock' or 'bond'.")
                 continue
