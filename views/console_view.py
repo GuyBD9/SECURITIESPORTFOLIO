@@ -1,8 +1,8 @@
 # views/console_view.py
-from controllers.portfolio_controller import PortfolioController
-from controllers.ai_controller import AIController
-from models.stock import CommonStock
-from models.bond import CorporateBond
+from SECURITIESPORTFOLIO.controllers.portfolio_controller import PortfolioController
+from SECURITIESPORTFOLIO.controllers.ai_controller import AIController
+from SECURITIESPORTFOLIO.models.stocks.common_stock import CommonStock
+from SECURITIESPORTFOLIO.models.bonds.corporate_bond import CorporateBond
 
 def start_repl():
     # Default risk level can be set to "Low Risk", "Medium Risk", or "High Risk"
