@@ -1,5 +1,5 @@
 # models/bond.py
-from SECURITIESPORTFOLIO.models.security import Security
+from models.security import Security
 
 class Bond(Security):
     def __init__(self, symbol: str, name: str, price: float, industry: str = "", volatility: str = "low", bond_type: str = "corporate"):

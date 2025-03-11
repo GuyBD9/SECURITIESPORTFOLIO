@@ -1,5 +1,5 @@
 # models/stock.py
-from SECURITIESPORTFOLIO.models.security import Security
+from models.security import Security
 
 class Stock(Security):
     def __init__(self, symbol: str, name: str, price: float, dividend_yield: float = 0.0, industry: str = "", volatility: str = "low"):

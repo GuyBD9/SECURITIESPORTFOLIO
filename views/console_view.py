@@ -1,8 +1,9 @@
 # views/console_view.py
-from SECURITIESPORTFOLIO.controllers.portfolio_controller import PortfolioController
-from SECURITIESPORTFOLIO.controllers.ai_controller import AIController
-from SECURITIESPORTFOLIO.models.stocks.common_stock import CommonStock
-from SECURITIESPORTFOLIO.models.bonds.corporate_bond import CorporateBond
+from controllers.portfolio_controller import PortfolioController
+from controllers.ai_controller import AIController
+from models.stocks.common_stock import CommonStock
+from models.bonds.corporate_bond import CorporateBond
+from tabulate import tabulate
 
 def start_repl():
     # Default risk level can be set to "Low Risk", "Medium Risk", or "High Risk"
@@ -10,7 +11,7 @@ def start_repl():
     ai_controller = AIController()
 
     print("Welcome to the Securities Investment Manager!")
-    print("Commands: setrisk <level>, buy <type> <symbol> <quantity>, sell <type> <symbol> <quantity>, ai <question>, show portfolio, exit")
+    print("Commands: setrisk <level>, buy <type> <symbol> <quantity>, sell <type> <symbol> <quantity>, ai <question>, show portfolio, show securities, exit")
     
     while True:
         command = input(">> ").strip().lower()
@@ -57,6 +58,15 @@ def start_repl():
                     print(f"  {sec} : {qty}")
             else:
                 print("Portfolio is empty.")
+        elif command.startswith("show securities"):
+            from database.db_manager import DatabaseManager
+            db = DatabaseManager()
+            securities = db.get_all_securities()
+            if securities:
+                headers = ["Symbol", "Name", "Price", "Sector", "Volatility", "Type", "Bond Type"]
+                print(tabulate(securities, headers=headers, tablefmt="grid"))
+            else:
+                print("No securities found in the database.")
         else:
             print("Unknown command. Please try again.")
 

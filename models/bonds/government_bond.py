@@ -1,4 +1,4 @@
-from SECURITIESPORTFOLIO.models.bonds.bond import Bond
+from models.bonds.bond import Bond
 
 class GovernmentBond(Bond):
     def __init__(self, symbol: str, name: str, price: float, industry: str = "", volatility: str = "low"):

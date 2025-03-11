@@ -1,4 +1,4 @@
-# risk/risk_calculator.py
+# risk/consts.py
 
 # Define industry risk mapping
 INDUSTRY_RISK = {
