@@ -48,16 +48,10 @@ def handle_buy(portfolio_controller, command):
         print(Fore.RED + "Quantity must be an integer.")
         return
 
-    if sec_type == "stock":
-        security = CommonStock(symbol, "Example Stock", price=100, industry="Real Estate", volatility="Low")
-    elif sec_type == "bond":
-        security = CorporateBond(symbol, "Example Bond", price=1000, industry="Industry and Finance", volatility="High")
-    else:
-        print(Fore.RED + "Unknown security type. Use 'stock' or 'bond'.")
-        return
-    
-    result = portfolio_controller.buy_security(security, qty)
+    # שולחים את סוג נייר הערך, הסימבול והכמות ל-Controller
+    result = portfolio_controller.buy_security(sec_type, symbol, qty)
     print(Fore.GREEN + result)
+
 
 def handle_ai(ai_controller, command):
     question = command[3:].strip()

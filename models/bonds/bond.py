@@ -1,4 +1,4 @@
-# models/bond.py
+# models/bonds/bond.py
 from models.security import Security
 
 class Bond(Security):

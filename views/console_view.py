@@ -1,17 +1,6 @@
-# views/console_view.py
-from controllers.portfolio_controller import PortfolioController
-from controllers.ai_controller import AIController
-from models.stocks.common_stock import CommonStock
-from models.bonds.corporate_bond import CorporateBond
-from tabulate import tabulate
-
-def start_repl():
-    # Default risk level can be set to "Low Risk", "Medium Risk", or "High Risk"
-    portfolio_controller = PortfolioController(risk_level="Low Risk")
-    ai_controller = AIController()
-
+def start_repl(portfolio_controller, ai_controller):
     print("Welcome to the Securities Investment Manager!")
-    print("Commands: setrisk <level>, buy <type> <symbol> <quantity>, sell <type> <symbol> <quantity>, ai <question>, show portfolio, show securities, exit")
+    print("Commands: setrisk <level>, buy <type> <symbol> <quantity>, sell <symbol> <quantity>, ai <question>, show portfolio, show securities, exit")
     
     while True:
         command = input(">> ").strip().lower()
@@ -37,31 +26,40 @@ def start_repl():
                 print("Quantity must be an integer.")
                 continue
 
-            if sec_type == "stock":
-                # For demonstration, create a CommonStock with sample data.
-                security = CommonStock(symbol, "Example Stock", price=100, industry="real estate", volatility="low")
-            elif sec_type == "bond":
-                security = CorporateBond(symbol, "Example Bond", price=1000, industry="industry and finance", volatility="high")
-            else:
-                print("Unknown security type. Use 'stock' or 'bond'.")
+            result = portfolio_controller.buy_security(sec_type, symbol, qty)
+            print(result)
+        elif command.startswith("sell"):
+            parts = command.split()
+            if len(parts) != 3:
+                print("Invalid command. Usage: sell <symbol> <quantity>")
                 continue
-            result = portfolio_controller.buy_security(security, qty)
+            _, symbol, qty = parts
+            try:
+                qty = int(qty)
+            except ValueError:
+                print("Quantity must be an integer.")
+                continue
+
+            result = portfolio_controller.sell_security(symbol, qty)
             print(result)
         elif command.startswith("ai"):
             question = command[3:].strip()
             answer = ai_controller.consult_ai(question)
             print("AI Response:", answer)
         elif command.startswith("show portfolio"):
-            if portfolio_controller.portfolio:
-                print("Current Portfolio:")
-                for sec, qty in portfolio_controller.portfolio.items():
-                    print(f"  {sec} : {qty}")
-            else:
-                print("Portfolio is empty.")
+            portfolio_summary = portfolio_controller.get_portfolio_summary()
+            print(portfolio_summary)
         elif command.startswith("show securities"):
+            from concurrent.futures import ThreadPoolExecutor
             from database.db_manager import DatabaseManager
+            from tabulate import tabulate
+
+            executor = ThreadPoolExecutor(max_workers=5)
             db = DatabaseManager()
-            securities = db.get_all_securities()
+
+            future = executor.submit(db.get_all_securities)
+            securities = future.result()
+
             if securities:
                 headers = ["Symbol", "Name", "Price", "Sector", "Volatility", "Type", "Bond Type"]
                 print(tabulate(securities, headers=headers, tablefmt="grid"))
@@ -69,6 +67,3 @@ def start_repl():
                 print("No securities found in the database.")
         else:
             print("Unknown command. Please try again.")
-
-if __name__ == "__main__":
-    start_repl()
